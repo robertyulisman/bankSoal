@@ -8,7 +8,7 @@ export function SignIn() {
   const navigation = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const { errors } = useSelector((state) => state);
 
   const [form, setForm] = React.useState({

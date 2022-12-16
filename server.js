@@ -20,21 +20,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// Deployment Configurations
-// if (process.env.NODE_ENV === 'production') {
-//   // Express will serve up production assets
-//   // like our main.js file, or main.css file!
-//   app.use(express.static('client/build'));
-
-//   // Express will serve up the index.html file
-//   // if it doesn't recognize the route
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'), {
-//       removeAttributeQuotes: true,
-//     });
-//   });
-// }
-
 app.use("/asset", express.static(path.join(__dirname, "asset")));
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -49,17 +34,13 @@ require("./startup/routes")(app);
 if (process.env.NODE_ENV === "production") {
   // Express will serve up production assets
   // like our main.js file, or main.css file!
-  app.use(express.static("client/build"));
+  app.use(express.static("client/dist"));
 
   // Express will serve up the index.html file
   // if it doesn't recognize the route
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"), {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"), {
       removeAttributeQuotes: true,
     });
   });
 }
-
-app.get("/", (req, res) => {
-  res.json({ message: "oke test message oke" });
-});
