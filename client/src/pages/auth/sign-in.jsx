@@ -2,6 +2,7 @@ import { loginUser } from "@/Redux/actions/authActions";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import LoginIllustration from "../../../public/img/login.png";
 
 export function SignIn() {
   const navigation = useNavigate();
@@ -39,9 +40,9 @@ export function SignIn() {
         <div class="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between xl:justify-center">
           <div class="shrink-1 mb-12 grow-0 basis-auto md:mb-0 md:w-9/12 md:shrink-0 lg:w-6/12 xl:w-6/12">
             <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+              src={LoginIllustration}
               class="w-full"
-              alt="Sample image"
+              alt="bank soal illustration"
             />
           </div>
           <div class="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:ml-20 xl:w-5/12">

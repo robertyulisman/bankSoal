@@ -8,6 +8,15 @@ import {
   TabsHeader,
   Tab,
   Tooltip,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  Input,
+  Select,
+  Option,
+  DialogFooter,
+  Button,
+  Textarea,
 } from "@material-tailwind/react";
 import {
   Cog6ToothIcon,
@@ -25,6 +34,38 @@ export function Profile() {
   React.useEffect(() => {
     dispatch(getUserProfile(user?._id));
   }, []);
+
+  const [form, setform] = React.useState({
+    nama: "",
+    email: "",
+    password: "",
+    mobile: "",
+    profileInformation: "",
+  });
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(!open);
+
+    setform({
+      ...form,
+      nama: user.nama,
+      email: user.email,
+      mobile: user.mobile,
+    });
+  };
+  const handleChangeText = (e) => {
+    const { name, value } = e.target;
+
+    setform({
+      ...form,
+      [name]: value,
+    });
+  };
+
+  const handleSubmitModal = () => {
+    console.log("form", form);
+  };
   return (
     <>
       <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
@@ -76,7 +117,6 @@ export function Profile() {
                 name: user?.nama,
                 mobile: user?.mobile,
                 email: user?.email,
-                // location: "USA",
                 social: (
                   <div className="flex items-center gap-4">
                     <i className="fa-brands fa-facebook text-blue-700" />
@@ -87,13 +127,69 @@ export function Profile() {
               }}
               action={
                 <Tooltip content="Edit Profile">
-                  <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
+                  <PencilIcon
+                    onClick={handleOpen}
+                    className="h-4 w-4 cursor-pointer text-blue-gray-500"
+                  />
                 </Tooltip>
               }
             />
           </div>
         </CardBody>
       </Card>
+
+      {/* modal here */}
+      <Dialog open={open} handler={() => setOpen(!open)} size="md">
+        <DialogHeader>Edit Profile</DialogHeader>
+
+        <DialogBody divider>
+          <div className="m-auto flex w-full flex-col gap-5 ">
+            <Input
+              label="Nama"
+              size="lg"
+              name="nama"
+              value={form.nama}
+              onChange={(e) => handleChangeText(e)}
+            />
+            <Input
+              label="Email"
+              size="lg"
+              name="email"
+              value={form.email}
+              onChange={(e) => handleChangeText(e)}
+            />
+
+            <Input
+              label="Mobile"
+              size="lg"
+              name="mobile"
+              value={form.mobile}
+              onChange={(e) => handleChangeText(e)}
+            />
+            <Textarea
+              label="Profile Information"
+              size="lg"
+              name="profileInformation"
+              value={form.profileInformation}
+              onChange={(e) => handleChangeText(e)}
+            />
+          </div>
+        </DialogBody>
+
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setOpen(!open)}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="green" onClick={handleSubmitModal}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
     </>
   );
 }

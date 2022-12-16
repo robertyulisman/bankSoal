@@ -5,6 +5,7 @@ import {
   BellIcon,
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/solid";
 import { Home, Profile, Tables, Notifications, Admin } from "@/pages/dashboard";
 import { SignIn, SignUp } from "@/pages/auth";
@@ -37,7 +38,7 @@ export const routesSuper = [
     layout: "dashboard",
     pages: [
       {
-        icon: <UserCircleIcon {...icon} />,
+        icon: <UserGroupIcon {...icon} />,
         name: "admin",
         path: "/admin",
         element: <Admin />,

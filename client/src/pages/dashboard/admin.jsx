@@ -14,6 +14,7 @@ import {
   Input,
   Select,
   Option,
+  Chip,
 } from "@material-tailwind/react";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
@@ -204,13 +205,25 @@ export function Admin() {
                       </Typography>
                     </td>
                     <td className={className}>
-                      <Typography
+                      <Chip
+                        variant="gradient"
+                        color={
+                          item.type === "super admin"
+                            ? "green"
+                            : item.type === "admin"
+                            ? "blue"
+                            : "blue-gray"
+                        }
+                        value={item.type}
+                        className="py-0.5 px-2 text-[11px] font-medium"
+                      />
+                      {/* <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-semibold"
                       >
                         {item.type}
-                      </Typography>
+                      </Typography> */}
                     </td>
 
                     <td className={className}>
@@ -243,11 +256,9 @@ export function Admin() {
 
       {/* modal here */}
       <Dialog open={open} handler={() => setOpen(!open)} size="md">
-        <div className="m-auto flex w-full ">
-          <DialogHeader>
-            {typeModal === "add" ? "Add New" : "Edit"} Data
-          </DialogHeader>
-        </div>
+        <DialogHeader>
+          {typeModal === "add" ? "Add New" : "Edit"} Data
+        </DialogHeader>
 
         <DialogBody divider>
           <div className="m-auto flex w-full flex-col gap-5 ">
@@ -294,25 +305,20 @@ export function Admin() {
             />
           </div>
         </DialogBody>
-        <div className="m-auto flex w-full justify-end ">
-          <DialogFooter>
-            <Button
-              variant="text"
-              color="red"
-              onClick={() => setOpen(!open)}
-              className="mr-1"
-            >
-              <span>Cancel</span>
-            </Button>
-            <Button
-              variant="gradient"
-              color="green"
-              onClick={handleSubmitModal}
-            >
-              <span>Confirm</span>
-            </Button>
-          </DialogFooter>
-        </div>
+
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => setOpen(!open)}
+            className="mr-1"
+          >
+            <span>Cancel</span>
+          </Button>
+          <Button variant="gradient" color="green" onClick={handleSubmitModal}>
+            <span>Confirm</span>
+          </Button>
+        </DialogFooter>
       </Dialog>
     </div>
   );
