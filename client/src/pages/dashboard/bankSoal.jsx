@@ -95,13 +95,6 @@ export function BankSoal() {
     // console.log("dataPages", dataPages);
   };
 
-  const handleNext = (currPage) => {
-    setPage(currPage);
-  };
-  const handlePrev = () => {
-    page > 1 && setPage((page) => page - 1);
-  };
-
   const getDataSoal = async () => {
     console.log("currPage", currPage);
     const { data } = await axios.get(
@@ -109,12 +102,16 @@ export function BankSoal() {
     );
 
     setData(data.data);
-    getPages(data.total_data);
+
+    setTimeout(() => {
+      getPages(data.total_data);
+    }, 300);
   };
   const handleChangeTotalPage = (value) => {
     console.log("value", value);
-    setCurrPage(1);
+
     setTotalPage(value);
+    setCurrPage(1);
   };
 
   React.useEffect(() => {
@@ -285,7 +282,6 @@ export function BankSoal() {
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
           <div className="mr-4 mb-4 mt-2 flex justify-end gap-2">
-            {/* <div className="flex w-[150px] gap-2 overflow-y-scroll scrollbar-hide"> */}
             {pages.map((pg, i) => (
               <>
                 {i === 0 && (
@@ -338,9 +334,11 @@ export function BankSoal() {
                     )}
 
                     <span
-                      onClick={() => currPage < 5 && setCurrPage(currPage + 1)}
+                      onClick={() =>
+                        currPage < pages.length && setCurrPage(currPage + 1)
+                      }
                       className={`rounded-md bg-gray-200 py-2 px-4 text-sm duration-300 ease-in-out ${
-                        currPage >= 5
+                        currPage >= pages.length
                           ? "hover:cursor-not-allowed"
                           : "hover:cursor-pointer hover:bg-blue-500 hover:text-white"
                       }`}
@@ -360,7 +358,6 @@ export function BankSoal() {
                 onChange={(value) => handleChangeTotalPage(value)}
                 label="Per Page"
               >
-                <Option value={2}>2</Option>
                 <Option value={10}>10</Option>
                 <Option value={25}>25</Option>
                 <Option value={50}>50</Option>
