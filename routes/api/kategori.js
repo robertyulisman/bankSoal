@@ -1,37 +1,32 @@
 const express = require("express");
 const router = express.Router();
-const Kelas = require("../../models/Kelas");
-// const mongoose = require("mongoose");
+const Kategori = require("../../models/Kategori");
 
 router.get("/", async (req, res) => {
-  const kelas = await Kelas.find().sort({ kelas: 1 });
-  res.status(200).json(kelas);
+  const kategori = await Kategori.find().sort({ nama: 1 });
+  res.status(200).json(kategori);
 });
 
 router.post("/", (req, res) => {
-  const { kelas, tingkatan } = req.body;
-  const newKelas = new Kelas({
-    kelas,
-    tingkatan,
+  const { nama } = req.body;
+  const newKategori = new Kategori({
+    nama,
   });
-  newKelas
+  newKategori
     .save()
     .then((data) => res.status(200).json(data))
     .catch((err) => res.status(400).json(err));
 });
 
-// update kategori
 router.put("/:_id", (req, res) => {
   const { _id } = req.params;
-  const { kelas, tingkatan } = req.body;
+  const { nama } = req.body;
 
-  Kelas.findById(_id).then((data) => {
-    if (kelas) {
-      data.kelas = kelas;
+  Kategori.findById(_id).then((data) => {
+    if (nama) {
+      data.nama = nama;
     }
-    if (tingkatan) {
-      data.tingkatan = tingkatan;
-    }
+
     data
       .save()
       .then((response) => res.status(200).json(response))
@@ -41,7 +36,7 @@ router.put("/:_id", (req, res) => {
 
 router.delete("/:_id", (req, res) => {
   const { _id } = req.params;
-  Kelas.findByIdAndRemove(_id)
+  Kategori.findByIdAndRemove(_id)
     .then((data) => {
       res.status(200).json(data);
     })

@@ -70,6 +70,28 @@ export const editAdmin = (idAdmin, form) => (dispatch) => {
       });
     });
 };
+export const updateProfileAdmin = (idAdmin, form) => (dispatch) => {
+  axios
+    .put(`${apiUrl}/api/admin/update_profile/${idAdmin}`, form)
+    .then((res) => {
+      console.log("res.data", res.data);
+      swal("Good job!", `admin, ${res.data.nama} berhasil di edit`, "success");
+      dispatch({
+        type: EDIT_ADMIN,
+        isSuccess: true,
+        isError: false,
+      });
+    })
+    .catch((err) => {
+      console.log(`err add data admin`, err);
+      swal("Uppss", `Error, ${err?.response?.data}`, "error");
+      dispatch({
+        type: EDIT_ADMIN,
+        isSuccess: false,
+        isError: true,
+      });
+    });
+};
 export const deleteAdmin = (idAdmin, form) => (dispatch) => {
   axios
     .delete(`${apiUrl}/api/admin/${idAdmin}`, form)

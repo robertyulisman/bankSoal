@@ -13,6 +13,7 @@ const schema = new Schema(
     profileInformation: { type: String, default: "" },
     mobile: { type: String, default: "" },
     alamatLengkap: { type: String, default: "" },
+    image: { type: String, default: "" },
   },
 
   {

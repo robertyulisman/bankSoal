@@ -1,14 +1,19 @@
 import {
   HomeIcon,
   UserCircleIcon,
-  TableCellsIcon,
-  BellIcon,
   ArrowRightOnRectangleIcon,
-  UserPlusIcon,
   UserGroupIcon,
+  BriefcaseIcon,
+  BookOpenIcon,
+  QueueListIcon,
+  ServerStackIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile, Tables, Notifications, Admin } from "@/pages/dashboard";
-import { SignIn, SignUp } from "@/pages/auth";
+import { Home, Profile, Admin } from "@/pages/dashboard";
+import { SignIn } from "@/pages/auth";
+import Kelas from "./pages/dashboard/kelas";
+import Pelajaran from "./pages/dashboard/pelajaran";
+import Kategori from "./pages/dashboard/kategori";
+import BankSoal from "./pages/dashboard/bankSoal";
 
 const icon = {
   className: "w-5 h-5 text-inherit",
@@ -24,17 +29,41 @@ export const routesSuper = [
         path: "/home",
         element: <Home />,
       },
-      {
-        icon: <TableCellsIcon {...icon} />,
-        name: "tables",
-        path: "/tables",
-        element: <Tables />,
-      },
     ],
   },
 
   {
     title: "Menu",
+    layout: "dashboard",
+    pages: [
+      {
+        icon: <BriefcaseIcon {...icon} />,
+        name: "kelas",
+        path: "/kelas",
+        element: <Kelas />,
+      },
+      {
+        icon: <BookOpenIcon {...icon} />,
+        name: "pelajaran",
+        path: "/pelajaran",
+        element: <Pelajaran />,
+      },
+      {
+        icon: <QueueListIcon {...icon} />,
+        name: "kategori",
+        path: "/kategori",
+        element: <Kategori />,
+      },
+      {
+        icon: <ServerStackIcon {...icon} />,
+        name: "bank soal",
+        path: "/bank_soal",
+        element: <BankSoal />,
+      },
+    ],
+  },
+  {
+    title: "User",
     layout: "dashboard",
     pages: [
       {
@@ -46,7 +75,7 @@ export const routesSuper = [
     ],
   },
   {
-    title: "user pages",
+    title: "Setting",
     layout: "dashboard",
     pages: [
       {
@@ -68,12 +97,6 @@ export const routesSuper = [
         path: "/sign-in",
         element: <SignIn />,
       },
-      // {
-      //   icon: <UserPlusIcon {...icon} />,
-      //   name: "sign up",
-      //   path: "/sign-up",
-      //   element: <SignUp />,
-      // },
     ],
   },
 ];

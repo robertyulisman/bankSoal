@@ -26,14 +26,32 @@ import {
 import { ProfileInfoCard } from "@/widgets/cards";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfile } from "@/Redux/actions/profileActions";
+import {
+  editAdmin,
+  resetAdmin,
+  updateProfileAdmin,
+} from "@/Redux/actions/adminActions";
+import { apiUrl } from "@/services/api";
 
 export function Profile() {
   const { user } = useSelector((state) => state.profile);
+  const { isSuccess, isError } = useSelector((state) => state.admin);
+  const [image, setImage] = React.useState("");
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     dispatch(getUserProfile(user?._id));
   }, []);
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      dispatch(getUserProfile(user?._id));
+      dispatch(resetAdmin());
+    }
+    if (isError) {
+      dispatch(resetAdmin());
+    }
+  }, [isSuccess]);
 
   const [form, setform] = React.useState({
     nama: "",
@@ -52,6 +70,7 @@ export function Profile() {
       nama: user.nama,
       email: user.email,
       mobile: user.mobile,
+      profileInformation: user.profileInformation,
     });
   };
   const handleChangeText = (e) => {
@@ -64,7 +83,15 @@ export function Profile() {
   };
 
   const handleSubmitModal = () => {
-    console.log("form", form);
+    let data = new FormData();
+    data.append("nama", form.nama);
+    data.append("email", form.email);
+    data.append("mobile", form.mobile);
+    data.append("profileInformation", form.profileInformation);
+    data.append("image", image);
+    dispatch(updateProfileAdmin(user?._id, data));
+    // console.log("form", form);
+    console.log("image", image);
   };
   return (
     <>
@@ -76,7 +103,7 @@ export function Profile() {
           <div className="mb-10 flex items-center justify-between gap-6">
             <div className="flex items-center gap-6">
               <Avatar
-                src="/img/bruce-mars.jpeg"
+                src={`${apiUrl}/${user?.image}`}
                 alt={user?.nama}
                 size="xl"
                 className="rounded-lg shadow-lg shadow-blue-gray-500/40"
@@ -172,6 +199,11 @@ export function Profile() {
               name="profileInformation"
               value={form.profileInformation}
               onChange={(e) => handleChangeText(e)}
+            />
+            <input
+              className="rounded-md border-[1px] border-gray-400 py-2 px-2 text-sm hover:cursor-pointer"
+              type="file"
+              onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
         </DialogBody>

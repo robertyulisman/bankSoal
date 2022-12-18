@@ -1,7 +1,7 @@
 import { loginUser } from "@/Redux/actions/authActions";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoginIllustration from "../../../public/img/login.png";
 
 export function SignIn() {

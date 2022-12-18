@@ -28,7 +28,7 @@ import {
   setOpenSidenav,
 } from "@/context";
 import { logoutUser } from "@/Redux/actions/authActions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export function DashboardNavbar() {
   const dispatchRedux = useDispatch();
@@ -37,10 +37,11 @@ export function DashboardNavbar() {
   const { fixedNavbar, openSidenav } = controller;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split("/").filter((el) => el !== "");
+  const { user } = useSelector((state) => state.profile);
+  console.log("user xxxxxxx", user);
 
   const handleLogOut = () => {
     dispatchRedux(logoutUser());
-    // history.push("/");
     navigation("/auth/sign-in");
   };
 
@@ -95,6 +96,9 @@ export function DashboardNavbar() {
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-blue-gray-500" />
           </IconButton>
+          <Typography variant="h6" color="blue-gray">
+            Selamat Datang, {user?.nama} 👋🏻
+          </Typography>
           <Tooltip content="Sign Out">
             <Button
               onClick={handleLogOut}
@@ -136,7 +140,10 @@ export function DashboardNavbar() {
               </MenuHandler>
             </Tooltip>
             <MenuList className="w-max border-0">
-              <MenuItem className="flex items-center gap-3">
+              <MenuItem>
+                <span>Belum ada data</span>
+              </MenuItem>
+              {/* <MenuItem className="flex items-center gap-3">
                 <Avatar
                   src="https://demos.creative-tim.com/material-dashboard/assets/img/team-2.jpg"
                   alt="item-1"
@@ -159,8 +166,8 @@ export function DashboardNavbar() {
                     <ClockIcon className="h-3.5 w-3.5" /> 13 minutes ago
                   </Typography>
                 </div>
-              </MenuItem>
-              <MenuItem className="flex items-center gap-4">
+              </MenuItem> */}
+              {/* <MenuItem className="flex items-center gap-4">
                 <Avatar
                   src="https://demos.creative-tim.com/material-dashboard/assets/img/small-logos/logo-spotify.svg"
                   alt="item-1"
@@ -183,8 +190,8 @@ export function DashboardNavbar() {
                     <ClockIcon className="h-3.5 w-3.5" /> 1 day ago
                   </Typography>
                 </div>
-              </MenuItem>
-              <MenuItem className="flex items-center gap-4">
+              </MenuItem> */}
+              {/* <MenuItem className="flex items-center gap-4">
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-tr from-blue-gray-800 to-blue-gray-900">
                   <CreditCardIcon className="h-4 w-4 text-white" />
                 </div>
@@ -204,7 +211,7 @@ export function DashboardNavbar() {
                     <ClockIcon className="h-3.5 w-3.5" /> 2 days ago
                   </Typography>
                 </div>
-              </MenuItem>
+              </MenuItem> */}
             </MenuList>
           </Menu>
         </div>

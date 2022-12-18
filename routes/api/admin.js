@@ -105,7 +105,7 @@ router.post("/register", (req, res) => {
 
 router.put("/:_id", (req, res) => {
   const { _id } = req.params;
-  const { nama, email, mobile } = req.body;
+  const { nama, email, mobile, profileInformation } = req.body;
 
   Admin.findById(_id).then((admin) => {
     if (nama) {
@@ -117,11 +117,66 @@ router.put("/:_id", (req, res) => {
     if (mobile) {
       admin.mobile = mobile;
     }
+    if (profileInformation) {
+      admin.profileInformation = profileInformation;
+    }
     admin
       .save()
       .then((response) => res.status(200).json(response))
       .catch((err) => res.status(500).json(err));
   });
+});
+router.put("/update_profile/:_id", upload.single("image"), (req, res) => {
+  const { _id } = req.params;
+  const { nama, email, mobile, profileInformation } = req.body;
+
+  console.log("req.file", req.file);
+
+  if (req.file === undefined) {
+    Admin.findById(_id).then((admin) => {
+      if (nama) {
+        admin.nama = nama;
+      }
+      if (email) {
+        admin.email = email;
+      }
+      if (mobile) {
+        admin.mobile = mobile;
+      }
+      if (profileInformation) {
+        admin.profileInformation = profileInformation;
+      }
+      admin
+        .save()
+        .then((response) => res.status(200).json(response))
+        .catch((err) => res.status(500).json(err));
+    });
+  } else {
+    const newFile = {
+      image: req.file.path.replace(/\\/g, "/"),
+    };
+    Admin.findById(_id).then((admin) => {
+      if (nama) {
+        admin.nama = nama;
+      }
+      if (email) {
+        admin.email = email;
+      }
+      if (mobile) {
+        admin.mobile = mobile;
+      }
+      if (profileInformation) {
+        admin.profileInformation = profileInformation;
+      }
+      if (newFile.image) {
+        admin.image = newFile.image;
+      }
+      admin
+        .save()
+        .then((response) => res.status(200).json(response))
+        .catch((err) => res.status(500).json(err));
+    });
+  }
 });
 
 router.delete("/:_id", async (req, res) => {

@@ -6,6 +6,8 @@ const FILE_TYPE_MAP = {
   "image/jpg": "jpg",
   "application/pdf": "pdf",
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ".xlsx",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    ".docx",
 };
 
 const storage = multer.diskStorage({
@@ -15,6 +17,9 @@ const storage = multer.diskStorage({
     const isExcel =
       file.mimetype ===
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    const isWord =
+      file.mimetype ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     let uploadError = new Error("Invalid image type.");
 
     if (isValid) {
@@ -25,6 +30,8 @@ const storage = multer.diskStorage({
       cb(uploadError, "asset/pdf");
     } else if (isExcel) {
       cb(uploadError, "asset/excel");
+    } else if (isWord) {
+      cb(uploadError, "asset/word");
     } else {
       cb(uploadError, "asset/images");
     }

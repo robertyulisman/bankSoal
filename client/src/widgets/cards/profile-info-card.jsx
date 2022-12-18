@@ -33,9 +33,9 @@ export function ProfileInfoCard({ title, description, details, action }) {
           <hr className="my-8 border-blue-gray-50" />
         ) : null}
         {details && (
-          <ul className="flex flex-col gap-4 p-0">
+          <ul className="flex flex-col  gap-4 p-0">
             {Object.keys(details).map((el, key) => (
-              <li key={key} className="flex items-center gap-4">
+              <li key={key} className="flex items-center justify-between gap-4">
                 <Typography
                   variant="small"
                   color="blue-gray"

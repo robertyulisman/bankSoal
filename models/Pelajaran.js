@@ -4,12 +4,11 @@ const { Schema } = mongoose;
 
 const schema = new Schema(
   {
-    kelas: { type: String, default: "" },
-    tingkatan: { type: String, default: "" },
+    nama: { type: String, default: "" },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Kelas", schema);
+module.exports = mongoose.model("Pelajaran", schema);

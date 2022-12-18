@@ -12,50 +12,42 @@ import {
   DialogFooter,
   Button,
   Input,
-  Select,
-  Option,
-  Chip,
-  Avatar,
 } from "@material-tailwind/react";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addAdmin,
-  deleteAdmin,
-  editAdmin,
-  getAdmin,
-  resetAdmin,
-} from "@/Redux/actions/adminActions";
 import swal from "sweetalert";
-import { apiUrl } from "@/services/api";
+import moment from "moment";
+import "moment/locale/id";
+import {
+  addKategori,
+  deleteKategori,
+  editKategori,
+  getKategori,
+  resetKategori,
+} from "@/Redux/actions/kategoriAction";
 
-export function Admin() {
+export function Kategori() {
   const dispatch = useDispatch();
-  const { data, isSuccess, isError } = useSelector((state) => state.admin);
+  const { data, isSuccess, isError } = useSelector((state) => state.kategori);
 
   const [open, setOpen] = React.useState(false);
   const [typeModal, setTypeModal] = React.useState("add");
   const [idSelected, setIdSelected] = React.useState(null);
   const [form, setform] = React.useState({
     nama: "",
-    email: "",
-    password: "",
-    mobile: "",
-    type: "",
   });
 
   React.useEffect(() => {
-    dispatch(getAdmin());
+    dispatch(getKategori());
   }, []);
 
   React.useEffect(() => {
     if (isSuccess) {
-      dispatch(getAdmin());
-      dispatch(resetAdmin());
+      dispatch(getKategori());
+      dispatch(resetKategori());
     }
     if (isError) {
-      dispatch(getAdmin());
-      dispatch(resetAdmin());
+      dispatch(resetKategori());
     }
   }, [isSuccess, isError]);
 
@@ -67,18 +59,12 @@ export function Admin() {
       setform({
         ...form,
         nama: item.nama,
-        email: item.email,
-        mobile: item.mobile,
       });
       setIdSelected(item._id);
     } else {
       setform({
         ...form,
         nama: "",
-        email: "",
-        mobile: "",
-        password: "",
-        type: "",
       });
     }
   };
@@ -90,26 +76,20 @@ export function Admin() {
       [name]: value,
     });
   };
-  const handleChangeSelect = (value) => {
-    setform({
-      ...form,
-      type: value,
-    });
-  };
 
   const handleSubmitModal = () => {
     if (typeModal === "add") {
-      dispatch(addAdmin(form));
+      dispatch(addKategori(form));
     } else {
-      dispatch(editAdmin(idSelected, form));
+      dispatch(editKategori(idSelected, form));
     }
     console.log("form", form);
   };
 
   const handleDelete = (_id) => {
     swal({
-      title: "Delete User",
-      text: "Want to Delete this User ? this will deleted permanently.",
+      title: "Delete Data",
+      text: "Want to Delete this Item ? this will deleted permanently.",
       icon: "warning",
       dangerMode: true,
       buttons: {
@@ -120,7 +100,7 @@ export function Admin() {
         },
       },
     }).then((value) => {
-      value == !null && dispatch(deleteAdmin(_id));
+      value == !null && dispatch(deleteKategori(_id));
     });
   };
 
@@ -133,7 +113,7 @@ export function Admin() {
           className="mb-8 flex items-center justify-between p-6"
         >
           <Typography variant="h6" color="white">
-            Tabel User Admin
+            Tabel Kategori Soal
           </Typography>
           <Tooltip content="Add">
             <IconButton
@@ -151,11 +131,9 @@ export function Admin() {
               <tr>
                 {[
                   "no",
-                  "image",
-                  "name",
-                  "email",
-                  "mobile",
-                  "type",
+                  "nama",
+                  "Tanggal dibuat",
+                  "Terakhir Update",
                   "action",
                 ].map((el) => (
                   <th
@@ -189,16 +167,6 @@ export function Admin() {
                       </Typography>
                     </td>
                     <td className={className}>
-                      <div className="h-[70px] w-[70px]">
-                        <Avatar
-                          src={`${apiUrl}/${item?.image}`}
-                          alt={item?.nama}
-                          size="xl"
-                          className="rounded-lg shadow-lg shadow-blue-gray-500/40"
-                        />
-                      </div>
-                    </td>
-                    <td className={className}>
                       <Typography
                         variant="small"
                         color="blue-gray"
@@ -207,13 +175,14 @@ export function Admin() {
                         {item.nama}
                       </Typography>
                     </td>
+
                     <td className={className}>
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {item.email}
+                        {moment(item.createdAt).fromNow()}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -222,22 +191,8 @@ export function Admin() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {item.mobile}
+                        {moment(item.updatedAt).fromNow()}
                       </Typography>
-                    </td>
-                    <td className={className}>
-                      <Chip
-                        variant="gradient"
-                        color={
-                          item.type === "super admin"
-                            ? "green"
-                            : item.type === "admin"
-                            ? "blue"
-                            : "blue-gray"
-                        }
-                        value={item.type}
-                        className="py-0.5 px-2 text-[11px] font-medium"
-                      />
                     </td>
 
                     <td className={className}>
@@ -277,44 +232,10 @@ export function Admin() {
         <DialogBody divider>
           <div className="m-auto flex w-full flex-col gap-5 ">
             <Input
-              label="Nama"
+              label="Kategori"
               size="lg"
               name="nama"
               value={form.nama}
-              onChange={(e) => handleChangeText(e)}
-            />
-            <Input
-              label="Email"
-              size="lg"
-              name="email"
-              value={form.email}
-              onChange={(e) => handleChangeText(e)}
-            />
-            {typeModal === "add" && (
-              <>
-                <Input
-                  label="Password"
-                  size="lg"
-                  name="password"
-                  value={form.password}
-                  onChange={(e) => handleChangeText(e)}
-                />
-                <Select
-                  label="User Type"
-                  size="lg"
-                  onChange={(value) => handleChangeSelect(value)}
-                >
-                  <Option value="super admin">Super Admin</Option>
-                  <Option value="admin">Admin</Option>
-                  <Option value="user">User</Option>
-                </Select>
-              </>
-            )}
-            <Input
-              label="Mobile"
-              size="lg"
-              name="mobile"
-              value={form.mobile}
               onChange={(e) => handleChangeText(e)}
             />
           </div>
@@ -338,4 +259,4 @@ export function Admin() {
   );
 }
 
-export default Admin;
+export default Kategori;
