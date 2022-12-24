@@ -6,8 +6,9 @@ import {
   BookOpenIcon,
   QueueListIcon,
   ServerStackIcon,
+  UserGroupIcon,
 } from "@heroicons/react/24/solid";
-import { Home, Profile } from "@/pages/dashboard";
+import { Admin, Home, Profile } from "@/pages/dashboard";
 import { SignIn } from "@/pages/auth";
 import Kelas from "./pages/dashboard/kelas";
 import Pelajaran from "./pages/dashboard/pelajaran";
@@ -63,6 +64,19 @@ export const routes = [
 
   {
     title: "User",
+    layout: "dashboard",
+    pages: [
+      {
+        icon: <UserGroupIcon {...icon} />,
+        name: "admin",
+        path: "/admin",
+        element: <Admin />,
+      },
+    ],
+  },
+
+  {
+    title: "Setting",
     layout: "dashboard",
     pages: [
       {
