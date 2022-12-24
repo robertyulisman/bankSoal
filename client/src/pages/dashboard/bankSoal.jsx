@@ -247,7 +247,7 @@ export function BankSoal() {
 
   const handleDownload = (item) => {
     let name = item;
-    fetch(`http://localhost:5000/${name}`).then((response) => {
+    fetch(`/${name}`).then((response) => {
       // fetch(`http://localhost:5000/asset/html/${data.path}`).then((response) => {
       response.blob().then((blob) => {
         let url = window.URL.createObjectURL(blob);
