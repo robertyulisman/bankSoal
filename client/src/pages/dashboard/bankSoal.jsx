@@ -130,7 +130,8 @@ export function BankSoal() {
 
   React.useEffect(() => {
     if (isSuccess) {
-      dispatch(getSoal());
+      // dispatch(getSoal());
+      getDataSoal();
       dispatch(resetSoal());
     }
     if (isError) {
