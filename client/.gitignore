@@ -11,8 +11,8 @@ package-lock.json
 yarn.lock
 
 node_modules
-dist
-dist-ssr
+# dist
+# dist-ssr
 *.local
 
 # Editor directories and files
