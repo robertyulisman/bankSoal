@@ -43,6 +43,8 @@ import { getPelajaran } from "@/Redux/actions/pelajaranAction";
 import { getKategori } from "@/Redux/actions/kategoriAction";
 import { ProfileInfoCard } from "@/widgets/cards";
 import axios from "axios";
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { apiUrl } from "@/services/api";
 
 export function BankSoal() {
   const dispatch = useDispatch();
@@ -179,7 +181,7 @@ export function BankSoal() {
   const handleView = (type, item) => {
     const dataFile = [];
     dataFile.push({
-      uri: `http://localhost:5000/asset/word/16713383765241.a.-silabus-b.arab-x-ganjil-k-13-revisi-dikonversi.docx`,
+      uri: `${apiUrl}/${item.file}`,
     });
     // dataFile.push({ uri: `http://139.180.219.98:5000/${item.file}` });
     setDocs(dataFile);
@@ -538,7 +540,7 @@ export function BankSoal() {
       <Dialog
         open={open}
         handler={() => setOpen(!open)}
-        size={typeModal === "view" ? "lg" : "md"}
+        size={typeModal === "view" ? "xl" : "md"}
       >
         <DialogHeader>
           {typeModal === "add"
@@ -554,7 +556,7 @@ export function BankSoal() {
           divider
         >
           {typeModal === "view" ? (
-            <div className="m-auto flex">
+            <div className="m-auto flex flex-col gap-5 md:flex-row">
               <ProfileInfoCard
                 title="Detail Information"
                 details={{
@@ -570,6 +572,13 @@ export function BankSoal() {
                   File: form?.file,
                 }}
               />
+              <div className="mx-4 w-full rounded-md bg-blue-gray-300 p-2">
+                <DocViewer
+                  pluginRenderers={DocViewerRenderers}
+                  initialActiveDocument={docs[1]}
+                  documents={docs}
+                />
+              </div>
             </div>
           ) : (
             <div className="m-auto flex  w-full flex-col gap-5 ">
