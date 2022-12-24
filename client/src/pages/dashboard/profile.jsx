@@ -103,7 +103,7 @@ export function Profile() {
           <div className="mb-10 flex items-center justify-between gap-6">
             <div className="flex items-center gap-6">
               <Avatar
-                src={`${apiUrl}/${user?.image}`}
+                src={`/${user?.image}`}
                 alt={user?.nama}
                 size="xl"
                 className="rounded-lg shadow-lg shadow-blue-gray-500/40"

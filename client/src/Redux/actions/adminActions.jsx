@@ -10,7 +10,7 @@ import { apiUrl } from "@/services/api";
 
 export const getAdmin = () => (dispatch) => {
   axios
-    .get(`${apiUrl}/api/admin`)
+    .get(`/api/admin`)
     .then((res) => {
       console.log("res.data", res.data);
       dispatch({
@@ -24,7 +24,7 @@ export const getAdmin = () => (dispatch) => {
 };
 export const addAdmin = (form) => (dispatch) => {
   axios
-    .post(`${apiUrl}/api/admin/register`, form)
+    .post(`/api/admin/register`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal(
@@ -50,7 +50,7 @@ export const addAdmin = (form) => (dispatch) => {
 };
 export const editAdmin = (idAdmin, form) => (dispatch) => {
   axios
-    .put(`${apiUrl}/api/admin/${idAdmin}`, form)
+    .put(`/api/admin/${idAdmin}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `admin, ${res.data.nama} berhasil di edit`, "success");
@@ -72,7 +72,7 @@ export const editAdmin = (idAdmin, form) => (dispatch) => {
 };
 export const updateProfileAdmin = (idAdmin, form) => (dispatch) => {
   axios
-    .put(`${apiUrl}/api/admin/update_profile/${idAdmin}`, form)
+    .put(`/api/admin/update_profile/${idAdmin}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `admin, ${res.data.nama} berhasil di edit`, "success");
@@ -94,7 +94,7 @@ export const updateProfileAdmin = (idAdmin, form) => (dispatch) => {
 };
 export const deleteAdmin = (idAdmin, form) => (dispatch) => {
   axios
-    .delete(`${apiUrl}/api/admin/${idAdmin}`, form)
+    .delete(`/api/admin/${idAdmin}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `admin, ${res.data.nama} berhasil dihapus`, "success");

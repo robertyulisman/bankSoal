@@ -10,7 +10,7 @@ import { apiUrl } from "@/services/api";
 
 export const getSoal = () => (dispatch) => {
   axios
-    .get(`${apiUrl}/api/bank_soal`)
+    .get(`/api/bank_soal`)
     .then((res) => {
       console.log("res.data", res.data);
       dispatch({
@@ -24,7 +24,7 @@ export const getSoal = () => (dispatch) => {
 };
 export const addSoal = (idUser, form) => (dispatch) => {
   axios
-    .post(`${apiUrl}/api/bank_soal/${idUser}`, form)
+    .post(`/api/bank_soal/${idUser}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil ditambahkan`, "success");
@@ -45,7 +45,7 @@ export const addSoal = (idUser, form) => (dispatch) => {
 };
 export const editSoal = (id, form) => (dispatch) => {
   axios
-    .put(`${apiUrl}/api/bank_soal/${id}`, form)
+    .put(`/api/bank_soal/${id}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil di edit`, "success");
@@ -67,7 +67,7 @@ export const editSoal = (id, form) => (dispatch) => {
 };
 export const deleteSoal = (id, form) => (dispatch) => {
   axios
-    .delete(`${apiUrl}/api/bank_soal/${id}`, form)
+    .delete(`/api/bank_soal/${id}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil dihapus`, "success");

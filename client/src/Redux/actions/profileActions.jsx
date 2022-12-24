@@ -5,7 +5,7 @@ import { apiUrl } from "@/services/api";
 // get profile user
 export const getUserProfile = (idUser) => (dispatch) => {
   axios
-    .get(`${apiUrl}/api/admin/${idUser}`)
+    .get(`/api/admin/${idUser}`)
     .then((res) => {
       dispatch({
         type: GET_PROFILE,

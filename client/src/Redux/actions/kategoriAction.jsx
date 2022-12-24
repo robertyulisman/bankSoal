@@ -10,7 +10,7 @@ import { apiUrl } from "@/services/api";
 
 export const getKategori = () => (dispatch) => {
   axios
-    .get(`${apiUrl}/api/kategori`)
+    .get(`/api/kategori`)
     .then((res) => {
       console.log("res.data", res.data);
       dispatch({
@@ -24,7 +24,7 @@ export const getKategori = () => (dispatch) => {
 };
 export const addKategori = (form) => (dispatch) => {
   axios
-    .post(`${apiUrl}/api/kategori`, form)
+    .post(`/api/kategori`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil ditambahkan`, "success");
@@ -46,7 +46,7 @@ export const addKategori = (form) => (dispatch) => {
 };
 export const editKategori = (id, form) => (dispatch) => {
   axios
-    .put(`${apiUrl}/api/kategori/${id}`, form)
+    .put(`/api/kategori/${id}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil di edit`, "success");
@@ -68,7 +68,7 @@ export const editKategori = (id, form) => (dispatch) => {
 };
 export const deleteKategori = (id, form) => (dispatch) => {
   axios
-    .delete(`${apiUrl}/api/kategori/${id}`, form)
+    .delete(`/api/kategori/${id}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil dihapus`, "success");

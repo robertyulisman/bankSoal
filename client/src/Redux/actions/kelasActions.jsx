@@ -10,7 +10,7 @@ import { apiUrl } from "@/services/api";
 
 export const getKelas = () => (dispatch) => {
   axios
-    .get(`${apiUrl}/api/kelas`)
+    .get(`/api/kelas`)
     .then((res) => {
       console.log("res.data", res.data);
       dispatch({
@@ -24,7 +24,7 @@ export const getKelas = () => (dispatch) => {
 };
 export const addKelas = (form) => (dispatch) => {
   axios
-    .post(`${apiUrl}/api/kelas`, form)
+    .post(`/api/kelas`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil ditambahkan`, "success");
@@ -46,7 +46,7 @@ export const addKelas = (form) => (dispatch) => {
 };
 export const editKelas = (id, form) => (dispatch) => {
   axios
-    .put(`${apiUrl}/api/kelas/${id}`, form)
+    .put(`/api/kelas/${id}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil di edit`, "success");
@@ -68,7 +68,7 @@ export const editKelas = (id, form) => (dispatch) => {
 };
 export const deleteKelas = (id, form) => (dispatch) => {
   axios
-    .delete(`${apiUrl}/api/kelas/${id}`, form)
+    .delete(`/api/kelas/${id}`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal("Good job!", `data berhasil dihapus`, "success");

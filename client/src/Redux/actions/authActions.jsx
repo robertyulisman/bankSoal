@@ -9,7 +9,7 @@ import { apiUrl } from "@/services/api";
 // login user
 export const loginUser = (userData) => (dispatch) => {
   axios
-    .post(`${apiUrl}/api/admin/login`, userData)
+    .post(`/api/admin/login`, userData)
     .then((res) => {
       // save to localstorage
       const { token } = res.data;

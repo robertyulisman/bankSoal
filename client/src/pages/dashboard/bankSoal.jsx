@@ -98,7 +98,7 @@ export function BankSoal() {
   const getDataSoal = async () => {
     console.log("currPage", currPage);
     const { data } = await axios.get(
-      `${apiUrl}/api/bank_soal?page=${currPage}&perPage=${totalPage}`
+      `/api/bank_soal?page=${currPage}&perPage=${totalPage}`
     );
 
     setData(data.data);

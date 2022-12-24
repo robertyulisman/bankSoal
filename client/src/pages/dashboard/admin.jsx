@@ -191,7 +191,7 @@ export function Admin() {
                     <td className={className}>
                       <div className="h-[70px] w-[70px]">
                         <Avatar
-                          src={`${apiUrl}/${item?.image}`}
+                          src={`/${item?.image}`}
                           alt={item?.nama}
                           size="xl"
                           className="rounded-lg shadow-lg shadow-blue-gray-500/40"
