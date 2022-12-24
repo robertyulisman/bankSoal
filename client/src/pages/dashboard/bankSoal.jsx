@@ -43,9 +43,6 @@ import { getPelajaran } from "@/Redux/actions/pelajaranAction";
 import { getKategori } from "@/Redux/actions/kategoriAction";
 import { ProfileInfoCard } from "@/widgets/cards";
 import axios from "axios";
-import FileViewer from "react-file-viewer";
-
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 export function BankSoal() {
   const dispatch = useDispatch();
@@ -558,7 +555,7 @@ export function BankSoal() {
         >
           {typeModal === "view" ? (
             <div className="m-auto flex">
-              {/* <ProfileInfoCard
+              <ProfileInfoCard
                 title="Detail Information"
                 details={{
                   Nama: form?.nama,
@@ -572,21 +569,7 @@ export function BankSoal() {
                   "Tanggal Penggunaan": form?.tanggalPenggunaan,
                   File: form?.file,
                 }}
-              /> */}
-              <div className="h-[50vh] w-[500px] bg-blue-gray-200 object-contain">
-                {/* <FileViewer
-                  fileType={getExtension(form?.file || "empty.exe")}
-                  filePath={`http://localhost:5000/${form?.file}`}
-                  // errorComponent={CustomErrorComponent}
-                  onError={(e) => console.log("error load file", e)}
-                /> */}
-                <DocViewer
-                  documents={docs}
-                  initialActiveDocument={docs[0]}
-                  pluginRenderers={DocViewerRenderers}
-                  prefetchMethod="GET"
-                />
-              </div>
+              />
             </div>
           ) : (
             <div className="m-auto flex  w-full flex-col gap-5 ">
