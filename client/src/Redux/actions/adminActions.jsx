@@ -24,7 +24,7 @@ export const getAdmin = () => (dispatch) => {
 };
 export const addAdmin = (form) => (dispatch) => {
   axios
-    .post(`api/admin/register`, form)
+    .post(`/api/admin/register`, form)
     .then((res) => {
       console.log("res.data", res.data);
       swal(

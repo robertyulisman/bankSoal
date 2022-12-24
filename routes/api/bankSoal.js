@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const BankSoal = require("../../models/BankSoal");
 const upload = require("../../startup/upload");
+const path = require("path");
+const fs = require("fs");
+const { PDFNet } = require("@pdftron/pdfnet-node");
 
 router.get("/", async (req, res) => {
   const currentPage = req.query.page || 1;
@@ -32,6 +35,42 @@ router.get("/", async (req, res) => {
       });
     });
 });
+
+// router.get("/preview_file", (req, res) => {
+//   const { fileName } = req.query;
+//   console.log("fileName", `./asset/word/${fileName}`);
+
+//   const inputPath = path.resolve(__dirname, `./asset/word/${fileName}`);
+//   const outputPath = path.resolve(__dirname, `./asset/word/${fileName}.pdf`);
+
+//   const convertToPdf = async () => {
+//     const pdfdoc = await PDFNet.PDFDoc.create();
+//     await pdfdoc.initSecurityHandler();
+//     await PDFNet.Convert.toPdf(pdfdoc, inputPath);
+//     pdfdoc.save(outputPath, PDFNet.SDFDoc.SaveOptions.e_linearized);
+//   };
+
+//   PDFNet.runWithCleanup(
+//     convertToPdf,
+//     "demo:1671867833409:7d658504030000000012581676a2f6ca7691985dc1a3f4ea1371ac5dba"
+//   )
+//     .then(() => {
+//       fs.readFile(outputPath, (err, data) => {
+//         if (err) {
+//           res.statusCode = 500;
+//           res.end(err);
+//         } else {
+//           res.setHeader("ContentType", "application/pdf");
+//           res.end(data);
+//         }
+//       });
+//     })
+//     .catch((err) => {
+//       console.log("err creating pdf", err);
+//       res.statusCode = 500;
+//       res.end(err);
+//     });
+// });
 
 router.post("/:_id_PIC", upload.single("file"), (req, res) => {
   const { _id_PIC } = req.params;

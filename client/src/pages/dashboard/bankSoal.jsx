@@ -43,7 +43,9 @@ import { getPelajaran } from "@/Redux/actions/pelajaranAction";
 import { getKategori } from "@/Redux/actions/kategoriAction";
 import { ProfileInfoCard } from "@/widgets/cards";
 import axios from "axios";
-import { apiUrl } from "@/services/api";
+import FileViewer from "react-file-viewer";
+
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 export function BankSoal() {
   const dispatch = useDispatch();
@@ -56,6 +58,8 @@ export function BankSoal() {
   const [open, setOpen] = React.useState(false);
   const [typeModal, setTypeModal] = React.useState("add");
   const [idSelected, setIdSelected] = React.useState(null);
+  const [docs, setDocs] = React.useState([]);
+  console.log("docs xxxxxxxxxxxxx", docs);
   const [form, setform] = React.useState({
     nama: "",
     kelas: "",
@@ -176,6 +180,15 @@ export function BankSoal() {
     }
   };
   const handleView = (type, item) => {
+    const dataFile = [];
+    dataFile.push({
+      uri: `http://localhost:5000/asset/word/16713383765241.a.-silabus-b.arab-x-ganjil-k-13-revisi-dikonversi.docx`,
+    });
+    // dataFile.push({ uri: `http://139.180.219.98:5000/${item.file}` });
+    setDocs(dataFile);
+
+    console.log("dataFile", dataFile);
+
     setTypeModal(type);
     setOpen(!open);
     setform({
@@ -258,6 +271,14 @@ export function BankSoal() {
         a.click();
       });
     });
+  };
+
+  const getExtension = (fileName) => {
+    let re = /(?:\.([^.]+))?$/;
+    const extension = re.exec(fileName)[1];
+    console.log("extension", extension);
+
+    return extension;
   };
 
   return (
@@ -537,7 +558,7 @@ export function BankSoal() {
         >
           {typeModal === "view" ? (
             <div className="m-auto flex">
-              <ProfileInfoCard
+              {/* <ProfileInfoCard
                 title="Detail Information"
                 details={{
                   Nama: form?.nama,
@@ -551,7 +572,21 @@ export function BankSoal() {
                   "Tanggal Penggunaan": form?.tanggalPenggunaan,
                   File: form?.file,
                 }}
-              />
+              /> */}
+              <div className="h-[50vh] w-[500px] bg-blue-gray-200 object-contain">
+                {/* <FileViewer
+                  fileType={getExtension(form?.file || "empty.exe")}
+                  filePath={`http://localhost:5000/${form?.file}`}
+                  // errorComponent={CustomErrorComponent}
+                  onError={(e) => console.log("error load file", e)}
+                /> */}
+                <DocViewer
+                  documents={docs}
+                  initialActiveDocument={docs[0]}
+                  pluginRenderers={DocViewerRenderers}
+                  prefetchMethod="GET"
+                />
+              </div>
             </div>
           ) : (
             <div className="m-auto flex  w-full flex-col gap-5 ">
