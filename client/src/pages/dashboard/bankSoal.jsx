@@ -100,15 +100,25 @@ export function BankSoal() {
 
   const getDataSoal = async () => {
     console.log("currPage", currPage);
-    const { data } = await axios.get(
-      `/api/bank_soal?page=${currPage}&perPage=${totalPage}`
-    );
+    if (user?.type === "user") {
+      const { data } = await axios.get(
+        `/api/bank_soal/${user._id}?page=${currPage}&perPage=${totalPage}`
+      );
+      setData(data.data);
 
-    setData(data.data);
+      setTimeout(() => {
+        getPages(data.total_data);
+      }, 300);
+    } else {
+      const { data } = await axios.get(
+        `/api/bank_soal?page=${currPage}&perPage=${totalPage}`
+      );
+      setData(data.data);
 
-    setTimeout(() => {
-      getPages(data.total_data);
-    }, 300);
+      setTimeout(() => {
+        getPages(data.total_data);
+      }, 300);
+    }
   };
   const handleChangeTotalPage = (value) => {
     console.log("value", value);

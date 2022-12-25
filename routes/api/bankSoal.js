@@ -36,6 +36,32 @@ router.get("/", async (req, res) => {
     });
 });
 
+router.get("/:_idUser", async (req, res) => {
+  const { _idUser } = req.params;
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perPage || 10;
+
+  BankSoal.countDocuments({ pic: _idUser })
+    .then((bank) => {
+      totalItems = bank;
+
+      return BankSoal.find({ pic: _idUser })
+        .sort({ _id: -1 })
+        .populate([{ path: "pic", model: "Admin", select: "nama" }])
+        .skip((+currentPage - 1) * +perPage)
+        .limit(+perPage);
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: "Data Soal berhasil dipanggil",
+        data: result,
+        total_data: totalItems,
+        per_page: +perPage,
+        current_page: +currentPage,
+      });
+    });
+});
+
 // router.get("/preview_file", (req, res) => {
 //   const { fileName } = req.query;
 //   console.log("fileName", `./asset/word/${fileName}`);
