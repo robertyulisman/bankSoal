@@ -25,6 +25,7 @@ import {
   getKategori,
   resetKategori,
 } from "@/Redux/actions/kategoriAction";
+import { formatDate } from "@/utils/globalFunctions";
 
 export function Kategori() {
   const dispatch = useDispatch();
@@ -182,7 +183,7 @@ export function Kategori() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.createdAt).format("DD MMMM YYYY, HH:mm")}
+                        {formatDate(item.createdAt)}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -191,7 +192,7 @@ export function Kategori() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.updatedAt).format("DD MMMM YYYY, HH:mm")}
+                        {formatDate(item.updatedAt)}
                       </Typography>
                     </td>
 

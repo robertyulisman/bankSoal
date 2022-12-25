@@ -45,6 +45,7 @@ import { ProfileInfoCard } from "@/widgets/cards";
 import axios from "axios";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { apiUrl } from "@/services/api";
+import { formatDate } from "@/utils/globalFunctions";
 
 export function BankSoal() {
   const dispatch = useDispatch();
@@ -492,7 +493,7 @@ export function BankSoal() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.createdAt).format("DD MMMM YYYY: HH mm")}
+                        {formatDate(item.createdAt)}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -501,7 +502,7 @@ export function BankSoal() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.updatedAt).format("DD MMMM YYYY: HH mm")}
+                        {formatDate(item.updatedAt)}
                       </Typography>
                     </td>
 

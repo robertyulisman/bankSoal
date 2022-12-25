@@ -27,6 +27,7 @@ import {
   getPelajaran,
   resetPelajaran,
 } from "@/Redux/actions/pelajaranAction";
+import { formatDate } from "@/utils/globalFunctions";
 
 export function Pelajaran() {
   const dispatch = useDispatch();
@@ -184,7 +185,7 @@ export function Pelajaran() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.createdAt).format("DD MMMM YYYY, HH:mm")}
+                        {formatDate(item.createdAt)}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -193,7 +194,7 @@ export function Pelajaran() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.updatedAt).format("DD MMMM YYYY, HH:mm")}
+                        {formatDate(item.updatedAt)}
                       </Typography>
                     </td>
 
