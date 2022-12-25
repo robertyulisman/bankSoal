@@ -492,7 +492,7 @@ export function BankSoal() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.createdAt).fromNow()}
+                        {moment(item.createdAt).format("DD MMMM YYYY: HH mm")}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -501,7 +501,7 @@ export function BankSoal() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.updatedAt).fromNow()}
+                        {moment(item.updatedAt).format("DD MMMM YYYY: HH mm")}
                       </Typography>
                     </td>
 
