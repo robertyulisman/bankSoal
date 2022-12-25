@@ -113,7 +113,7 @@ export function Kategori() {
           className="mb-8 flex items-center justify-between p-6"
         >
           <Typography variant="h6" color="white">
-            Tabel Kategori Soal
+            Tabel Kategori
           </Typography>
           <Tooltip content="Add">
             <IconButton
@@ -182,7 +182,7 @@ export function Kategori() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.createdAt).format("DD MMMM YYYY: HH mm")}
+                        {moment(item.createdAt).format("DD MMMM YYYY, HH:mm")}
                       </Typography>
                     </td>
                     <td className={className}>
@@ -191,7 +191,7 @@ export function Kategori() {
                         color="blue-gray"
                         className="font-semibold"
                       >
-                        {moment(item.updatedAt).format("DD MMMM YYYY: HH mm")}
+                        {moment(item.updatedAt).format("DD MMMM YYYY, HH:mm")}
                       </Typography>
                     </td>
 
