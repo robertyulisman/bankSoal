@@ -15,6 +15,8 @@ const schema = new Schema(
     jumlahFotocopy: { type: String, default: "" },
     tanggalPenggunaan: { type: String, default: "" },
     file: { type: String, default: "" },
+    fileType: { type: String, default: "" },
+    statusDipakai: { type: Boolean, default: false },
   },
   {
     timestamps: true,

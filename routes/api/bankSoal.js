@@ -10,30 +10,30 @@ router.get("/", async (req, res) => {
   const currentPage = req.query.page || 1;
   const perPage = req.query.perPage || 10;
 
-  // const bank = await BankSoal.find()
-  //   .populate([{ path: "pic", model: "Admin", select: "nama" }])
-  //   .sort({ _id: -1 });
-  // res.status(200).json(bank);
+  const bank = await BankSoal.find()
+    .populate([{ path: "pic", model: "Admin", select: "nama" }])
+    .sort({ _id: -1 });
+  res.status(200).json(bank);
 
-  BankSoal.countDocuments()
-    .then((bank) => {
-      totalItems = bank;
+  // BankSoal.countDocuments()
+  //   .then((bank) => {
+  //     totalItems = bank;
 
-      return BankSoal.find()
-        .sort({ _id: -1 })
-        .populate([{ path: "pic", model: "Admin", select: "nama" }])
-        .skip((+currentPage - 1) * +perPage)
-        .limit(+perPage);
-    })
-    .then((result) => {
-      res.status(200).json({
-        message: "Data Soal berhasil dipanggil",
-        data: result,
-        total_data: totalItems,
-        per_page: +perPage,
-        current_page: +currentPage,
-      });
-    });
+  //     return BankSoal.find()
+  //       .sort({ _id: -1 })
+  //       .populate([{ path: "pic", model: "Admin", select: "nama" }])
+  //       .skip((+currentPage - 1) * +perPage)
+  //       .limit(+perPage);
+  //   })
+  //   .then((result) => {
+  //     res.status(200).json({
+  //       message: "Data Soal berhasil dipanggil",
+  //       data: result,
+  //       total_data: totalItems,
+  //       per_page: +perPage,
+  //       current_page: +currentPage,
+  //     });
+  //   });
 });
 
 router.get("/:_idUser", async (req, res) => {
@@ -110,6 +110,7 @@ router.post("/:_id_PIC", upload.single("file"), (req, res) => {
     jumlahLembar,
     jumlahFotocopy,
     tanggalPenggunaan,
+    fileType,
   } = req.body;
 
   if (req.file === undefined)
@@ -127,6 +128,7 @@ router.post("/:_id_PIC", upload.single("file"), (req, res) => {
     jumlahFotocopy,
     tanggalPenggunaan,
     file: req.file.path.replace(/\\/g, "/"),
+    fileType,
   });
 
   newBank
@@ -232,6 +234,26 @@ router.put("/:_id", upload.single("file"), (req, res) => {
   }
 });
 
+router.put("/change_status/:_id", (req, res) => {
+  const { _id } = req.params;
+  BankSoal.findById(_id).then((data) => {
+    if (data.statusDipakai === false) {
+      data.statusDipakai = true;
+    } else {
+      data.statusDipakai = false;
+    }
+
+    data
+      .save()
+      .then((response) => {
+        res.status(200).json(response);
+      })
+      .catch((err) => {
+        res.status(500).json(err);
+      });
+  });
+});
+
 router.delete("/:_id", (req, res) => {
   const { _id } = req.params;
   BankSoal.findByIdAndRemove(_id)
@@ -239,6 +261,20 @@ router.delete("/:_id", (req, res) => {
       res.status(200).json(data);
     })
     .catch((err) => res.status(404).json(err));
+});
+
+router.delete("/delete_selected/:ids", (req, res) => {
+  const { ids } = req.params;
+  const data = ids.split(",");
+
+  BankSoal.deleteMany({ _id: { $in: data } })
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((err) => {
+      console.log("err delete selected", err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;

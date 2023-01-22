@@ -1,6 +1,7 @@
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon, ArrowDownCircleIcon } from "@heroicons/react/24/solid";
 import {
   Avatar,
+  Button,
   Card,
   CardBody,
   CardHeader,
@@ -10,6 +11,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import React from "react";
+import { DownloadTableExcel } from "react-export-table-to-excel";
 
 export const TableAdminSuper = ({
   onClickEdit,
@@ -18,6 +20,8 @@ export const TableAdminSuper = ({
   data,
   type,
 }) => {
+  const tableRef = React.useRef(null);
+
   return (
     <Card>
       <CardHeader
@@ -28,18 +32,32 @@ export const TableAdminSuper = ({
         <Typography variant="h6" color="white">
           Tabel {type}
         </Typography>
-        <Tooltip content="Add">
-          <IconButton
-            onClick={() => onClickAdd()}
-            variant="text"
-            color="blue-gray"
-          >
-            <PlusCircleIcon className="h-8 w-8 text-white" />
-          </IconButton>
-        </Tooltip>
+        <div className="flex items-center gap-2">
+          <Tooltip className="flex" content="Export Excel">
+            <DownloadTableExcel
+              filename={`User ${type}`}
+              sheet={type}
+              currentTableRef={tableRef.current}
+            >
+              <div className="flex rounded-md bg-white px-3 py-2 text-sm text-blue-500">
+                <ArrowDownCircleIcon className="h-8 w-8 text-blue-500" />
+                <button>Export Excel</button>
+              </div>
+            </DownloadTableExcel>
+          </Tooltip>
+          <Tooltip content="Add">
+            <IconButton
+              onClick={() => onClickAdd()}
+              variant="text"
+              color="blue-gray"
+            >
+              <PlusCircleIcon className="h-8 w-8 text-white" />
+            </IconButton>
+          </Tooltip>
+        </div>
       </CardHeader>
       <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-        <table className="w-full min-w-[640px] table-auto">
+        <table ref={tableRef} className="w-full min-w-[640px] table-auto">
           <thead>
             <tr>
               {["no", "image", "name", "email", "mobile", "type", "action"].map(

@@ -33,7 +33,7 @@ export const routesSuper = [
   },
 
   {
-    title: "Menu",
+    title: "Bank Soal",
     layout: "dashboard",
     pages: [
       {
@@ -56,7 +56,7 @@ export const routesSuper = [
       },
       {
         icon: <ServerStackIcon {...icon} />,
-        name: "bank soal",
+        name: "soal",
         path: "/bank_soal",
         element: <BankSoal />,
       },
@@ -75,7 +75,7 @@ export const routesSuper = [
     ],
   },
   {
-    title: "Setting",
+    title: "Pengaturan",
     layout: "dashboard",
     pages: [
       {

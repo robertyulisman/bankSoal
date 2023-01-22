@@ -18,7 +18,6 @@ import {
   MenuList,
   MenuItem,
   Menu,
-  Chip,
 } from "@material-tailwind/react";
 import {
   ArrowDownTrayIcon,
@@ -26,17 +25,16 @@ import {
   EyeIcon,
   PencilSquareIcon,
   PlusCircleIcon,
-  ArrowDownIcon,
+  ArrowDownOnSquareIcon,
 } from "@heroicons/react/24/solid";
 import { useDispatch, useSelector } from "react-redux";
 
 import swal from "sweetalert";
+import moment from "moment";
 import "moment/locale/id";
 import {
   addSoal,
-  changeStatus,
   deleteSoal,
-  deleteSoalSelected,
   editSoal,
   getSoal,
   resetSoal,
@@ -45,21 +43,16 @@ import { getKelas } from "@/Redux/actions/kelasActions";
 import { getPelajaran } from "@/Redux/actions/pelajaranAction";
 import { getKategori } from "@/Redux/actions/kategoriAction";
 import { ProfileInfoCard } from "@/widgets/cards";
+import axios from "axios";
 import { apiUrl } from "@/services/api";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import DataTable from "react-data-table-component";
 import { formatDate } from "@/utils/globalFunctions";
-import ExportSoal from "@/component/ExportExcel/ExportSoal";
 
 export function BankSoal() {
   const dispatch = useDispatch();
   const { isSuccess, isError } = useSelector((state) => state.soal);
-  const tableRef = React.useRef(null);
-
-  const [data, setData] = React.useState([]);
-  const [dataFilter, setDataFilter] = React.useState([]);
   const { user } = useSelector((state) => state.auth);
-  const dataSoal = useSelector((state) => state.soal.data);
   const dataKategori = useSelector((state) => state.kategori.data);
   const dataKelas = useSelector((state) => state.kelas.data);
   const dataPelajaran = useSelector((state) => state.pelajaran.data);
@@ -81,14 +74,50 @@ export function BankSoal() {
     file: "",
   });
   const [file, setFile] = React.useState("");
-  const [search, setSearch] = React.useState("");
-  const [deleteButton, setDeleteButon] = React.useState(false);
-  const [deleteSelected, setDeleteSelected] = React.useState([]);
 
-  React.useEffect(() => {
-    setData(dataSoal);
-    setDataFilter(dataSoal);
-  }, []);
+  const [data, setData] = React.useState([]);
+  // pagination
+  const [page, setPage] = React.useState(1);
+  const [currPage, setCurrPage] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(10);
+  const [pages, setPages] = React.useState([]);
+  const getPages = (totalData) => {
+    let data = totalData / totalPage;
+
+    if (totalData % totalPage !== 0) {
+      console.log("oke");
+      data = Math.floor(data) + 1;
+    } else {
+      data = Math.floor(data) + 1;
+    }
+
+    const dataPages = [];
+
+    for (let index = 0; index < data; index++) {
+      dataPages.push({ page: index + 1 });
+    }
+    setPages(dataPages);
+    // console.log("dataPages", dataPages);
+  };
+
+  const getDataSoal = async () => {
+    console.log("currPage", currPage);
+    const { data } = await axios.get(
+      `${apiUrl}/api/bank_soal?page=${currPage}&perPage=${totalPage}`
+    );
+
+    setData(data.data);
+
+    setTimeout(() => {
+      getPages(data.total_data);
+    }, 300);
+  };
+  const handleChangeTotalPage = (value) => {
+    console.log("value", value);
+
+    setTotalPage(value);
+    setCurrPage(1);
+  };
 
   React.useEffect(() => {
     dispatch(getSoal());
@@ -99,21 +128,20 @@ export function BankSoal() {
   }, []);
 
   React.useEffect(() => {
+    if (currPage || totalPage) {
+      getDataSoal();
+    }
+  }, [currPage, totalPage]);
+
+  React.useEffect(() => {
     if (isSuccess) {
       dispatch(getSoal());
       dispatch(resetSoal());
-      setLoading(false);
     }
     if (isError) {
       dispatch(resetSoal());
-      setLoading(false);
     }
-
-    if (dataSoal) {
-      setData(dataSoal);
-      setDataFilter(dataSoal);
-    }
-  }, [isSuccess, isError, dataSoal]);
+  }, [isSuccess, isError]);
 
   const handleOpen = (type, item) => {
     setTypeModal(type);
@@ -156,7 +184,7 @@ export function BankSoal() {
     dataFile.push({
       uri: `${apiUrl}/${item.file}`,
     });
-
+    // dataFile.push({ uri: `http://139.180.219.98:5000/${item.file}` });
     setDocs(dataFile);
     setTypeModal(type);
     setOpen(!open);
@@ -192,26 +220,25 @@ export function BankSoal() {
   };
 
   const handleSubmitModal = () => {
-    const re = /(?:\.([^.]+))?$/;
-    const fileName = re.exec(file.name)[1];
-
-    let dataSoal = new FormData();
-    dataSoal.append("nama", form.nama);
-    dataSoal.append("kelas", form.kelas);
-    dataSoal.append("pelajaran", form.pelajaran);
-    dataSoal.append("kategori", form.kategori);
-    dataSoal.append("lampiran", form.lampiran);
-    dataSoal.append("jumlahHalaman", form.jumlahHalaman);
-    dataSoal.append("jumlahLembar", form.jumlahLembar);
-    dataSoal.append("jumlahFotocopy", form.jumlahFotocopy);
-    dataSoal.append("tanggalPenggunaan", form.tanggalPenggunaan);
-    dataSoal.append("fileType", fileName);
-    dataSoal.append("file", file);
-    if (typeModal === "add") {
-      dispatch(addSoal(user._id, dataSoal));
-    } else {
-      dispatch(editSoal(idSelected, dataSoal));
-    }
+    console.log("file", file);
+    // let dataSoal = new FormData();
+    // dataSoal.append("nama", form.nama);
+    // dataSoal.append("kelas", form.kelas);
+    // dataSoal.append("pelajaran", form.pelajaran);
+    // dataSoal.append("kategori", form.kategori);
+    // dataSoal.append("lampiran", form.lampiran);
+    // dataSoal.append("jumlahHalaman", form.jumlahHalaman);
+    // dataSoal.append("jumlahLembar", form.jumlahLembar);
+    // dataSoal.append("jumlahFotocopy", form.jumlahFotocopy);
+    // dataSoal.append("tanggalPenggunaan", form.tanggalPenggunaan);
+    // dataSoal.append("file", file);
+    // if (typeModal === "add") {
+    //   dispatch(addSoal(user._id, dataSoal));
+    //   getDataSoal();
+    // } else {
+    //   dispatch(editSoal(idSelected, dataSoal));
+    //   getDataSoal();
+    // }
   };
 
   const handleDelete = (_id) => {
@@ -232,14 +259,6 @@ export function BankSoal() {
     });
   };
 
-  const handleDeleteSelected = () => {
-    setLoading(true);
-    let idSelected = [];
-    deleteSelected.map((item) => idSelected.push(item._id));
-    console.log("idSelected", idSelected);
-    dispatch(deleteSoalSelected(idSelected));
-  };
-
   const handleDownload = (item) => {
     let name = item;
     fetch(`http://localhost:5000/${name}`).then((response) => {
@@ -254,25 +273,28 @@ export function BankSoal() {
     });
   };
 
-  const handleChangeStatus = (item) => {
-    console.log("item", item);
-    dispatch(changeStatus(item._id));
-  };
-
+  //   nama
+  // kelas
+  // pelajaran
+  // kategori
+  // PIC
+  // Tanggal dibuat
+  // Terakhir Update
+  // action
   const columns = [
     {
-      name: "NAMA",
+      name: "Nama",
       selector: (row) => row.nama,
       sortable: true,
       grow: 2,
     },
     {
-      name: "KELAS",
+      name: "Kelas",
       selector: (row) => row.kelas,
       sortable: true,
     },
     {
-      name: "PELAJARAN",
+      name: "Pelajaran",
       selector: (row) => row.pelajaran,
       sortable: true,
     },
@@ -281,30 +303,18 @@ export function BankSoal() {
       selector: (row) => row.pic?.nama,
       sortable: true,
     },
-
     {
-      name: <div>TGL PENGGUNAAN</div>,
-      selector: (row) => formatDate(row.tanggalPenggunaan),
+      name: "Tanggal dibuat",
+      selector: (row) => formatDate(row.createdAt),
       sortable: true,
     },
     {
-      name: "Status",
-      center: true,
-      cell: (item) => (
-        <Chip
-          onClick={() => handleChangeStatus(item)}
-          variant="gradient"
-          color={item.statusDipakai === true ? "green" : "blue-gray"}
-          value={
-            item.statusDipakai === true ? "Sudah dipakai" : "Belum dipakai"
-          }
-          className="py-0.5 px-2 text-[11px] font-medium"
-        />
-      ),
+      name: "Tanggal Update",
+      selector: (row) => formatDate(row.updatedAt),
+      sortable: true,
     },
-
     {
-      name: "ACTION",
+      name: "Action",
       center: true,
       cell: (item) => (
         <Menu placement="left-start">
@@ -336,10 +346,33 @@ export function BankSoal() {
     },
   ];
 
+  // const [filterText, setFilterText] = React.useState("");
+  // const [resetPaginationToggle, setResetPaginationToggle] =
+  //   React.useState(false);
+  // const filteredItems = fakeUsers.filter(
+  //   (item) =>
+  //     item.name && item.name.toLowerCase().includes(filterText.toLowerCase())
+  // );
+
+  // const subHeaderComponentMemo = React.useMemo(() => {
+  //   const handleClear = () => {
+  //     if (filterText) {
+  //       setResetPaginationToggle(!resetPaginationToggle);
+  //       setFilterText("");
+  //     }
+  //   };
+
+  //   return (
+  //     <FilterComponent
+  //       onFilter={(e) => setFilterText(e.target.value)}
+  //       onClear={handleClear}
+  //       filterText={filterText}
+  //     />
+  //   );
+  // }, [filterText, resetPaginationToggle]);
+
   const handleChangeRowChange = (e) => {
-    setDeleteSelected(e.selectedRows);
     console.log("e", e);
-    e.selectedCount === 0 ? setDeleteButon(false) : setDeleteButon(true);
   };
   const customStyles = {
     rows: {
@@ -349,25 +382,16 @@ export function BankSoal() {
     },
     headCells: {
       style: {
-        fontSize: "11px",
+        fontSize: "14px",
         fontWeight: "bold",
-        color: "gray",
       },
     },
     cells: {
-      style: {},
+      style: {
+        // paddingLeft: "8px", // override the cell padding for data cells
+        // paddingRight: "8px",
+      },
     },
-  };
-
-  const handleSearch = (v) => {
-    console.log("v", v.target.value);
-    setSearch(v.target.value);
-    const filtered = dataFilter.filter(
-      (item) =>
-        item.nama.toUpperCase().indexOf(v.target.value.toUpperCase()) > -1
-    );
-
-    setData(filtered);
   };
 
   return (
@@ -393,110 +417,12 @@ export function BankSoal() {
           </Tooltip>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <div className="flex flex-col md:flex-row">
-            <div className="flex w-full px-5 pt-2 lg:w-[25%]">
-              <Input
-                label="Search"
-                onChange={(v) => handleSearch(v)}
-                icon={<i className="fas fa-search" />}
-              />
-            </div>
-            <div className="flex px-4 lg:px-0">
-              {deleteButton && data.length > 0 ? (
-                <div className="flex px-2 pt-2">
-                  <Button
-                    onClick={handleDeleteSelected}
-                    color="red"
-                    variant="gradient"
-                  >
-                    Delete Selected
-                  </Button>
-                </div>
-              ) : null}
-              <div>
-                <ExportSoal data={data} />
-              </div>
-            </div>
+          <div className="flex w-[25%] px-5 pt-2">
+            <Input label="Search" icon={<i className="fas fa-search" />} />
           </div>
-
           <div className="p-5">
             <DataTable
-              expandableRows
               columns={columns}
-              expandableRowsComponent={(item) => {
-                console.log("item expendeble xxxx", item.data);
-
-                return (
-                  <div>
-                    <div className="m-2 grid grid-cols-5 gap-2 rounded-md bg-gray-300 p-4">
-                      <div>
-                        <span className="text-sm">Tanggal dibuat</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {formatDate(item.data.createdAt)}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Tanggal diupdate</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {formatDate(item.data.updateAt)}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Type File</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data.fileType}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">File</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data?.file}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Kategori</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data?.kategori}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="m-2 grid grid-cols-5 gap-2 rounded-md bg-gray-300 p-4">
-                      <div>
-                        <span className="text-sm">Jml Fotocopy</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data.jumlahFotocopy}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Jml Halaman</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data.jumlahHalaman}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Jml Lembar</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data.jumlahLembar}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Lampiran</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data?.lampiran}
-                        </p>
-                      </div>
-                      <div>
-                        <span className="text-sm">Status dipakai</span>
-                        <p className="rounded-md bg-gray-100 py-1 px-2 text-[12px] text-black">
-                          {item.data?.statusDipakai
-                            ? "Sudah Dipakai"
-                            : "Belum dipakai"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }}
               data={data}
               progressPending={loading}
               selectableRows
@@ -505,9 +431,157 @@ export function BankSoal() {
               onSelectedRowsChange={handleChangeRowChange}
               customStyles={customStyles}
               highlightOnHover
-              sortIcon={<ArrowDownIcon />}
+              sortIcon={<ArrowDownOnSquareIcon />}
             />
           </div>
+
+          {/* <table className="relative  w-full min-w-[640px] table-auto">
+            <thead>
+              <tr>
+                {[
+                  "no",
+                  "nama",
+                  "kelas",
+                  "pelajaran",
+                  "kategori",
+                  "PIC",
+                  "Tanggal dibuat",
+                  "Terakhir Update",
+                  "action",
+                ].map((el) => (
+                  <th
+                    key={el}
+                    className="border-b border-blue-gray-50 py-3 px-5 text-left"
+                  >
+                    <Typography
+                      variant="small"
+                      className="text-[11px] font-bold uppercase text-blue-gray-400"
+                    >
+                      {el}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, key) => {
+                const className = `py-3 px-5  ${
+                  key === data.length - 1 ? "" : "border-b border-blue-gray-50"
+                }`;
+
+                return (
+                  <tr
+                    className="duration-200 ease-in-out hover:cursor-pointer hover:bg-[#f5f5f5]"
+                    key={item._id}
+                  >
+                    <td className={className}>
+                      <Typography className="text-xs font-semibold text-blue-gray-600">
+                        {key + 1}
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {item.nama}
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {item.kelas}
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {item.pelajaran}
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {item.kategori}
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {item?.pic?.nama || "-"}
+                      </Typography>
+                    </td>
+
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {moment(item.createdAt).fromNow()}
+                      </Typography>
+                    </td>
+                    <td className={className}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-semibold"
+                      >
+                        {moment(item.updatedAt).fromNow()}
+                      </Typography>
+                    </td>
+
+                    <td className={className}>
+                      <Menu placement="left-start">
+                        <MenuHandler>
+                          <Button variant="gradient">...</Button>
+                        </MenuHandler>
+                        <MenuList>
+                          <div className="flex items-center gap-2">
+                            <PencilSquareIcon className="h-[20px] w-[20px]" />
+                            <MenuItem onClick={() => handleOpen("edit", item)}>
+                              Edit
+                            </MenuItem>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <EyeIcon className="h-[20px] w-[20px]" />
+                            <MenuItem onClick={() => handleView("view", item)}>
+                              View
+                            </MenuItem>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <ArrowDownTrayIcon className="h-[20px] w-[20px]" />
+                            <MenuItem onClick={() => handleDownload(item.file)}>
+                              Download
+                            </MenuItem>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <TrashIcon className="h-[20px] w-[20px]" />
+                            <MenuItem onClick={() => handleDelete(item._id)}>
+                              Delete
+                            </MenuItem>
+                          </div>
+                        </MenuList>
+                      </Menu>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table> */}
         </CardBody>
       </Card>
 
@@ -631,9 +705,6 @@ export function BankSoal() {
                 value={form.tanggalPenggunaan}
                 onChange={(e) => handleChangeText(e)}
               />
-              <span className="-mt-4 ml-2 text-[12px] text-blue-600">
-                Tanggal Akan digunakan File
-              </span>
               <input
                 className="rounded-md border-[1px] border-gray-400 py-2 px-2 text-sm hover:cursor-pointer"
                 type="file"

@@ -13,7 +13,7 @@ const icon = {
 
 export const routes = [
   {
-    title: "Menu",
+    title: "Bank Soal",
     layout: "dashboard",
     pages: [
       {
